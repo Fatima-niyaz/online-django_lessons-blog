@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect
 from django.views import View
 
 from .models import Post, Tag
@@ -24,6 +25,13 @@ class TagCreate(View):
         form = TagForm()
         return render(request, 'blog/tag_create.html', context={'form': form})
 
+    def post(self, request):
+        bound_form = TagForm(request.POST)
+
+        if bound_form.is_valid():
+            new_tag = bound_form.save()
+            return redirect(new_tag)
+        return render(request, 'blog/tag_create.html', context={'form': bound_form})
 
 
 def tags_list(request):
